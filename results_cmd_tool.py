@@ -1,55 +1,58 @@
-# Command line tool using Python to fetch the results of students from "http://exam.msrit.edu/"
+# Command line tool using Python to fetch the results of students from "https://exam.msrit.edu/"
 # Refer the readme file for instructions on how to use the tool
 # Made by Manish.M
 
 import urllib.parse
 import urllib.request
+import ssl
 from bs4 import BeautifulSoup
 import optparse
-
+import os
 
 branches = ['CS', 'EC', 'IS', 'ME', 'ML', 'CH', 'CV', 'EE', 'TI', 'EI', 'IM', 'AT', 'BT']
 
-url = 'http://exam.msrit.edu/index.php'
-
-
 def fetch_results(usn):
-
     final_res = "<tr>"
-    values = {'usn': usn,  
-              'option': 'com_examresult',
-              'task': 'getResult'}
+    
+    # --- FIX: Using the direct GET URL found in the website's HTML ---
+    # This bypasses the need for POST form submission, cookies, and tokens
+    query_url = f"https://exam.msrit.edu/index.php/component/examresult/?usn={usn}&examId=59&task=getResult&bypass=1"
 
-    data = urllib.parse.urlencode(values)
-    data = data.encode('ascii')
-    req = urllib.request.Request(url, data)
-    with urllib.request.urlopen(req) as response:
-        result_page = response.read().decode("utf-8")
+    req = urllib.request.Request(query_url)
+    req.add_header('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36')
+    
+    ctx = ssl.create_default_context()
+    ctx.check_hostname = False
+    ctx.verify_mode = ssl.CERT_NONE
+
+    try:
+        with urllib.request.urlopen(req, context=ctx) as response:
+            result_page = response.read().decode("utf-8")
+    except Exception as e:
+        print(f"Network error for {usn}: {e}")
+        return None
 
     soup = BeautifulSoup(result_page, 'html.parser')
+    
     try:
         name = soup.find("div", {"class": "uk-card uk-card-body stu-data stu-data1"}).find('h3').get_text(strip=True)
         sem = soup.find("div", {"class": "uk-card uk-card-body stu-data stu-data2"}).find('p').get_text(strip=True)[-1:]
-        credits_registered = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec1"}).find(
-            'p').get_text(strip=True)
-        credits_earned = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec2"}).find(
-            'p').get_text(strip=True)
-        sgpa = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec3"}).find('p').get_text(
-            strip=True)
-        cgpa = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec4"}).find('p').get_text(
-            strip=True)
+        credits_registered = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec1"}).find('p').get_text(strip=True)
+        credits_earned = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec2"}).find('p').get_text(strip=True)
+        sgpa = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec3"}).find('p').get_text(strip=True)
+        cgpa = soup.find("div", {"class": "uk-card uk-card-default uk-card-body credits-sec4"}).find('p').get_text(strip=True)
 
         final_res += "<td>" + usn + "</td>" + "<td>" + name + "</td>" + "<td>" + sem + "</td>" + "<td>" + credits_registered + "</td>"
         final_res += "<td>" + credits_earned + "</td>" + "<td>" + sgpa + "</td>" + "<td>" + cgpa + "</td>"
         final_res += "<td><table><tr><th>Code</th><th>Subject</th><th>Creds registered</th><th>Creds earned</th><th>Grade</th></tr>"
 
-        res = soup.find("table", {"class", "uk-table uk-table-striped res-table"}).find_all("tr")[1:]
+        res = soup.find("table", {"class": "uk-table uk-table-striped res-table"}).find_all("tr")[1:]
         results = []
         for item in res:
             r = []
-            data = item.find_all('td')
+            td_data = item.find_all('td')
             final_res += "<tr>"
-            for x in data:
+            for x in td_data:
                 r.append(x.get_text(strip=True))
                 final_res += "<td>" + x.get_text(strip=True) + "</td>"
             final_res += "</tr>"
@@ -57,8 +60,13 @@ def fetch_results(usn):
 
         final_res += "</table></td></tr>"
 
-    except:
-        print(usn + " not found "+ " or website is down " + " or check your internet connection")
+    except Exception as e:
+        # --- DEBUGGER: If scraping fails, save the page so we can see why ---
+        error_filename = f"error_log_{usn}.html"
+        with open(error_filename, "w", encoding="utf-8") as err_file:
+            err_file.write(result_page)
+        
+        print(f"{usn} not found or blocked. Checked saved file: {error_filename} to see server response.")
         return None
 
     return final_res
@@ -68,7 +76,7 @@ def is_int(y):
     try:
         int(y)
         return True
-    except:
+    except ValueError:
         return False
 
 
@@ -76,11 +84,9 @@ def validate_parameters(year, branch, max_range, parser):
     if not year or not branch or not max_range:
         print(parser.usage)
         exit(0)
-    
     else:
         branch = branch.upper()
         
-        # Validating the year entered by the user
         if is_int(year):
             if len(year) == 2:
                 pass
@@ -91,16 +97,13 @@ def validate_parameters(year, branch, max_range, parser):
             print("The year should be an integer")
             exit(2)
         
-        # Validating the branch entered by the user
         if branch in branches:
             pass
         else:
             print("Enter a valid branch extension such as: ")
-            for b in branches:
-                print(b, end=' ')
-            print("\n")
+            print(" ".join(branches))
             exit(3)
-        # Validating the Max range of USNs
+
         if is_int(max_range):
             pass
         else:
@@ -152,25 +155,28 @@ def main():
                 <table>
                     <tr><th>USN</th><th>Name</th><th>Sem</th><th>Creds registered</th><th>Creds earned</th><th>SGPA</th><th>CGPA</th><th>Subject-wise results</th></tr>"""
 
-    f = open('results.html', 'w')
+    with open('results.html', 'w', encoding='utf-8') as f:
+        f.write(text)
 
-    for i in range(1, int(max_range)+1):
-        usn = make_usn(year, branch, i)
-        r = fetch_results(usn)
-        if r:
-            # check if the usn exists or not before writing to the file
-            text += r
-        print('Writing results of ' + usn + ' to results.html')
+        for i in range(1, int(max_range)+1):
+            usn = make_usn(year, branch, i)
+            print(f"Fetching results for {usn}...")
+            r = fetch_results(usn)
+            
+            if r:
+                f.write(r)
+                print(f"Successfully wrote {usn} to results.html")
+                # Clean up error file if successful on a retry
+                if os.path.exists(f"error_log_{usn}.html"):
+                    os.remove(f"error_log_{usn}.html")
 
-    text += """          </table>
-                    </body>
-                </html>
-    """
+        closing_text = """          </table>
+                        </body>
+                    </html>
+        """
+        f.write(closing_text)
 
-    f.write(text)
-    f.close()
-
-    print("Results successfully fetched and stored in results.html")
+    print("\nProcess finished.")
 
 
 if __name__ == '__main__':
