@@ -8,7 +8,7 @@ from bs4 import BeautifulSoup
 import argparse
 import os
 
-branches = ['CS', 'EC', 'IS', 'ME', 'ML', 'CH', 'CV', 'EE', 'TI', 'EI', 'IM', 'AT', 'BT']
+branches = ['CS', 'EC', 'IS', 'ME', 'ML', 'CH', 'CV', 'EE', 'TI', 'EI', 'IM', 'AT', 'BT', "CY", "CI"]
 exam_id = "59"
 
 
