@@ -14,6 +14,7 @@ The original tool broke due to backend infrastructure and security updates on th
 * **Connection Stability:** Bypasses `[SSL: CERTIFICATE_VERIFY_FAILED]` errors (common on macOS/Linux Python environments) by utilizing a custom SSL context. 
 * **Header Configurations:** Integrates standard browser routing headers to ensure stable connectivity and prevent automated request blocking.
 * **Parser Improvements:** Fixed dictionary generation bugs in the HTML parser to prevent crashes during data extraction.
+* **Starting USN parameter:** Added a simple -s, --start parameter to start retreiving result from a certain usn instead of starting from 001 every single time
 
 ## ⚠️ Important Note on examId Maintenance
 The college's backend now requires an examId parameter to fetch results. Currently, the examId inside the script is set to 59.
@@ -36,12 +37,12 @@ cd MSRIT-Results-scraper
 
 <b> Using the tool </b> <br>
 <pre>
-python3 results_cmd_tool.py -y &lt;year(yy)&gt; -b &lt;branch extension(XX)&gt; -m &lt;max range of USN&gt; 
+python3 results_cmd_tool.py -y &lt;year(yy)&gt; -b &lt;branch extension(XX)&gt; -m &lt;max range of USN -s &lt; starting usn&gt; 
 </pre>
 
 <b> Arguments </b> <br>
 <pre> 
--y &lt;year(yy)&gt; -b &lt;branch extension(XX)&gt; -m &lt;max range of USN&gt; 
+-y &lt;year(yy)&gt; -b &lt;branch extension(XX)&gt; -m &lt;max range of USN &lt; starting usn &gt; 
 </pre>  
  
 <b> Options </b> <br>
@@ -51,6 +52,7 @@ python3 results_cmd_tool.py -y &lt;year(yy)&gt; -b &lt;branch extension(XX)&gt; 
   -b BRANCH, --branch=BRANCH
                         specify the branch extension  <br>
   -m MAX, --max=MAX     specify the max limit of USNs <br>
+  -s START, --start= START  specify the starting USN (simple alternative for single student result) <br>
 </pre>
 
 <b> Allowed branches for option -b or --branch</b> <br>
@@ -59,13 +61,13 @@ CS, EC, IS, ME, ML, CH, CV, EE, TI, EI, IM, AT, BT
 </pre>
 
 <b> Example usage </b> <br>
-Let us take the example where we want to retrieve the results of the students from USN 1 to 10 in Computer Science (CS) branch who joined the college in the year 2018<br>
+Let us take the example where we want to retrieve the results of the students from USN 3 to 12 (3 + 10) in Computer Science (CS) branch who joined the college in the year 2018<br>
 <pre>
-python results_cmd_tool.py -y 18 -b CS -m 10
+python results_cmd_tool.py -y 18 -b CS -m 10 -s 003
 </pre>
 <b>(OR)</b> <br>
 <pre>
-python results_cmd_tool.py --year 18 --branch CS --max 10
+python results_cmd_tool.py --year 18 --branch CS --max 10 --start 003
 </pre>
 
 # Where can I view the results that were fetched?
