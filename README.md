@@ -16,7 +16,7 @@ The original tool broke due to backend infrastructure and security updates on th
 * **Parser Improvements:** Fixed dictionary generation bugs in the HTML parser to prevent crashes during data extraction.
 
 ## ⚠️ Important Note on examId Maintenance
-The college's backend now requires an examId parameter to fetch results. Currently, the examId inside the script is set to 59 (corresponding to the first sem see exams).
+The college's backend now requires an examId parameter to fetch results. Currently, the examId inside the script is set to 59.
 
 For future semesters, this ID will change. You will need to inspect the network traffic on the official results website to find the new ID and update the examId=59 variable inside results_cmd_tool.py to keep the tool functional.
 
