@@ -1,4 +1,4 @@
-# MSRIT-Results-scraper
+# MSRIT-Results-scraper ( fixed ) (Only the result_cmd_tool.py fixed)
 <br>
 <b>Sample result of a student</b>
 <br>
@@ -7,10 +7,20 @@
 
 Note: The usn, name, cgpa, sgpa and grade fields are blurred in the pic for privacy reasons
 
+## 🛠️ What's New in this Fork?
+The original tool broke due to backend infrastructure and security updates on the college website. This fork revives the project with the following critical compatibility fixes:
+* **Authentication Flow Update:** Adapted the scraping mechanism to smoothly interface with the latest server-side session and token requirements.
+* **Dynamic Query Payload:** Accommodates the new backend API requirement to specify exact exam cycle parameters when querying databases.
+* **Connection Stability:** Bypasses `[SSL: CERTIFICATE_VERIFY_FAILED]` errors (common on macOS/Linux Python environments) by utilizing a custom SSL context. 
+* **Header Configurations:** Integrates standard browser routing headers to ensure stable connectivity and prevent automated request blocking.
+* **Parser Improvements:** Fixed dictionary generation bugs in the HTML parser to prevent crashes during data extraction.
 
-# Results scraper cli tool (results_cmd_tool.py)
+## ⚠️ Important Note on examId Maintenance
+The college's backend now requires an examId parameter to fetch results. Currently, the examId inside the script is set to 59 (corresponding to the first sem see exams).
 
-A command line interface that is designed for automating the task of fetching the results of students from http://exam.msrit.edu/ and displaying it in a tabular format on the browser<br>
+For future semesters, this ID will change. You will need to inspect the network traffic on the official results website to find the new ID and update the examId=59 variable inside results_cmd_tool.py to keep the tool functional.
+
+
 
 # Usage
 
@@ -70,9 +80,4 @@ python results_cmd_tool.py --year 18 --branch CS --max 10
 - Some USNs in the range may not be available due to various reasons
 
 <br><br>
-# Code for scraping the results of a single student (scraper.py)
-This is a piece of code in Python to scrape the results of a single student of MSRIT.<br>
-Take a look at this new results feature in action on [MSRIT Connect](https://play.google.com/store/apps/details?id=msrit.msritconnect.com.msritconnect&hl=en)!<br>
-<br>
-Replace <i>"USN Goes Here"</i> with your <i>USN</i> to fetch the result :) <br>
-All the best!
+
