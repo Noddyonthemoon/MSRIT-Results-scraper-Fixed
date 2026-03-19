@@ -80,8 +80,8 @@ def is_int(y):
         return False
 
 
-def validate_parameters(year, branch, max_range, parser):
-    if not year or not branch or not max_range:
+def validate_parameters(year, branch, max_range, start, parser):
+    if not year or not branch or not max_range or not start:
         print(parser.usage)
         exit(0)
     else:
@@ -109,6 +109,12 @@ def validate_parameters(year, branch, max_range, parser):
         else:
             print("Enter a valid integer for max range of USNs")
             exit(4)
+            
+        if is_int(start):
+            pass
+        else:
+            print("Enter a valid integer for starting USN")
+            exit(5)
 
 
 def make_usn(y, b, n):
@@ -126,17 +132,19 @@ def make_usn(y, b, n):
 
 
 def main():
-    parser = optparse.OptionParser('Usage: ' + '-y <year(yy)> -b <branch extension(XX)> -m <max range of USN>')
+    parser = optparse.OptionParser('Usage: ' + '-y <year(yy)> -b <branch extension(XX)> -m <max range of USN> -s <start USN>')
     parser.add_option('-y', '--year', dest='year', action="store", type='string', help='specify the last two digits of the year')
     parser.add_option('-b', '--branch', dest='branch', action="store", type='string', help='specify the branch extension')
-    parser.add_option('-m','--max', dest='max', action="store", type='string', help='specify the max limit of USNs')
+    parser.add_option('-m','--max', dest='max', action="store", type='string', help='specify the number of results to fetch')
+    parser.add_option('-s','--start', dest='start', action="store", type='string', default='1', help='specify the starting USN')
     (options, args) = parser.parse_args()
 
     year = options.year
     branch = options.branch
     max_range = options.max
+    start = options.start
 
-    validate_parameters(year, branch, max_range, parser)
+    validate_parameters(year, branch, max_range, start, parser)
     
     branch = branch.upper()
 
@@ -158,7 +166,9 @@ def main():
     with open('results.html', 'w', encoding='utf-8') as f:
         f.write(text)
 
-        for i in range(1, int(max_range)+1):
+        # Updated loop to use the starting parameter
+        start_val = int(start)
+        for i in range(start_val, start_val + int(max_range)):
             usn = make_usn(year, branch, i)
             print(f"Fetching results for {usn}...")
             r = fetch_results(usn)
