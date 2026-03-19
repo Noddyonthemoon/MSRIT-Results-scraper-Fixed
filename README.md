@@ -12,7 +12,7 @@
 >
 > ## Important Note on `examId` Maintenance
 >
-> The college's backend now requires an `examId` parameter to fetch results. Currently, the `examId` inside the script is set to `59`. For future semesters, this ID may change. You will need to inspect the network traffic on the official results website to find the new ID and update the `examId=59` variable inside `results_cmd_tool.py`.
+> The college's backend now requires an `examId` parameter to fetch results. Currently, the `examId` inside the script is set to `59`. For future semesters, this ID may change. You will need to inspect the network traffic on the official results website to find the new ID and update the `examId=59` variable inside `main.py`.
 
 ## Usage
 
@@ -30,7 +30,7 @@ $ cd MSRIT-Results-scraper-Fixed
 ### Using the tool
 
 ```bash
-$ python3 results_cmd_tool.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> -s <starting usn>
+$ python3 main.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> -s <starting usn>
 ```
 
 ## Arguments
@@ -69,9 +69,9 @@ CS, EC, IS, ME, ML, CH, CV, EE, TI, EI, IM, AT, BT
 Let us take the example where we want to retrieve the results of students from USN 3 to 12 (3 + 10) in Computer Science (CS) branch who joined the college in the year 2018:
 
 ```bash
-$ python results_cmd_tool.py -y 18 -b CS -m 10 -s 003
+$ python main.py -y 18 -b CS -m 10 -s 003
 # **(OR)**
-$ python results_cmd_tool.py --year 18 --branch CS --max 10 --start 003
+$ python main.py --year 18 --branch CS --max 10 --start 003
 ```
 
 ---
