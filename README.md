@@ -61,7 +61,7 @@ $ python3 main.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> 
 ## Allowed branches for option `-b` or `--branch`
 
 ```bash
-CS, EC, IS, ME, ML, CH, CV, EE, TI, EI, IM, AT, BT
+CS, EC, IS, ME, ML, CH, CV, EE, TI, EI, IM, AT, BT, CY, CI
 ```
 
 ## Example usage
