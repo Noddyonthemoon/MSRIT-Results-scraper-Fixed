@@ -6,13 +6,16 @@ import urllib.parse
 import urllib.request
 import ssl
 from bs4 import BeautifulSoup
-import optparse
+import argparse
 import os
 
-branches = ['CS', 'EC', 'IS', 'ME', 'ML', 'CH', 'CV', 'EE', 'TI', 'EI', 'IM', 'AT', 'BT']
+branches = ['CS', 'EC', 'IS', 'ME', 'ML', 'CH', 'CV', 'EE', 'TI', 'EI', 'IM', 'AT', 'BT', 'CY', 'CI']
 
 def fetch_results(usn):
     final_res = "<tr>"
+    
+    # --- FIX: Using the direct GET URL found in the website's HTML ---
+    # This bypasses the need for POST form submission, cookies, and tokens
     query_url = f"https://exam.msrit.edu/index.php/component/examresult/?usn={usn}&examId=59&task=getResult&bypass=1"
 
     req = urllib.request.Request(query_url)
@@ -58,6 +61,7 @@ def fetch_results(usn):
         final_res += "</table></td></tr>"
 
     except Exception as e:
+        # --- DEBUGGER: If scraping fails, save the page so we can see why ---
         error_filename = f"error_log_{usn}.html"
         with open(error_filename, "w", encoding="utf-8") as err_file:
             err_file.write(result_page)
@@ -79,7 +83,7 @@ def is_int(y):
 def validate_parameters(year, branch, max_range, start, parser):
     # max_range is now optional, so we only strictly check year and branch
     if not year or not branch:
-        print(parser.usage)
+        parser.print_help()
         exit(0)
     else:
         branch = branch.upper()
@@ -124,13 +128,14 @@ def make_usn(y, b, n):
 
 
 def main():
-    parser = optparse.OptionParser('Usage: ' + '-y <year(yy)> -b <branch extension(XX)> [-m <max range of USN>] [-s <start USN>]')
-    parser.add_option('-y', '--year', dest='year', action="store", type='string', help='specify the last two digits of the year')
-    parser.add_option('-b', '--branch', dest='branch', action="store", type='string', help='specify the branch extension')
+    parser = argparse.ArgumentParser(usage='%(prog)s -y <year(yy)> -b <branch extension(XX)> [-m <max range of USN>] [-s <start USN>]')
+    parser.add_argument('-y', '--year', dest='year', action="store", type=str, help='specify the last two digits of the year')
+    parser.add_argument('-b', '--branch', dest='branch', action="store", type=str, help='specify the branch extension')
     # Default for max is set to None to allow auto-detecting the end
-    parser.add_option('-m','--max', dest='max', action="store", type='string', default=None, help='specify the number of results to fetch')
-    parser.add_option('-s','--start', dest='start', action="store", type='string', default='1', help='specify the starting USN')
-    (options, args) = parser.parse_args()
+    parser.add_argument('-m','--max', dest='max', action="store", type=str, default=None, help='specify the number of results to fetch')
+    parser.add_argument('-s','--start', dest='start', action="store", type=str, default='1', help='specify the starting USN')
+    
+    options = parser.parse_args()
 
     year = options.year
     branch = options.branch
@@ -162,7 +167,9 @@ def main():
         start_val = int(start)
         i = start_val
         consecutive_failures = 0
-        failure_tolerance = 5 
+        failure_tolerance = 5  # Stop after 5 missing USNs in a row
+
+        # Replace the `for` loop with a `while` loop to support infinite scraping until end
         while True:
             # If a max range is provided, respect it
             if max_range is not None and i >= start_val + int(max_range):
