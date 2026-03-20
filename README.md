@@ -9,6 +9,8 @@
 > - Implemented newer exam id (`examId`) parameter queries
 > - Fixed SSL verification issues via custom context
 > - Added `-s/--start` to begin from a specific USN
+> - No longer the need to know the branch size, mentioning just -b will fetch the details of all the students. `-y 25 -b IS`
+> - 
 >
 > ## Important Note on `examId` Maintenance
 >
@@ -38,8 +40,8 @@ $ python3 main.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> 
 ```bash
 -y <year(yy)> 
 -b <branch extension(XX)> 
--m <max range of USN> 
--s <starting usn>
+-m <max range of USN > [optional]
+-s <starting usn > [optional]
 ```
 
 ---
@@ -48,12 +50,13 @@ $ python3 main.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> 
 
 ```bash
 -h, --help            show this help message and exit  
--y YEAR, --year=YEAR  specify the last two digits of the year  
+-y YEAR, --year=YEAR  specify the last two digits of the year of admission  
 -b BRANCH, --branch=BRANCH  
-                      specify the branch extension  
+                      specify the branch extension.
+                      ( only -b argument required, for the results of the whole batch of students in the said branch)
 -m MAX, --max=MAX     specify the max limit of USNs  
 -s START, --start=START  
-                      specify the starting USN
+                      specify the starting USN (default set to 001)
 ```
 
 ---
