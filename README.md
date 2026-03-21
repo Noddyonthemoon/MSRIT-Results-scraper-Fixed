@@ -10,8 +10,8 @@
 > - Fixed SSL verification issues via custom context
 > - Added `-s/--start` to begin from a specific USN
 > - No longer the need to know the branch size, mentioning just -b will fetch the details of all the students. `-y 25 -b IS`
-> - 
->
+> - Easy to use GUI interface added. Just run `main.py`. Results can now be fetched and viewed without the need of downloading.
+
 > ## Important Note on `examId` Maintenance
 >
 > The college's backend now requires an `examId` parameter to fetch results. Currently, the `examId` inside the script is set to `59`. For future semesters, this ID may change. You will need to inspect the network traffic on the official results website to find the new ID and update the `examId=59` variable inside `main.py`.
