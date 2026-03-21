@@ -94,7 +94,7 @@ class App(tk.Tk):
 
         # ── ADDITION: Create Rank List button ──────────────────────────────
         self.ranklist_btn = ttk.Button(
-            btn_frame, text="⭐ Create Rank List",
+            btn_frame, text="Create Rank List",
             command=self._on_create_ranklist, state="disabled")
         self.ranklist_btn.pack(side="left", padx=6)
         # ───────────────────────────────────────────────────────────────────
