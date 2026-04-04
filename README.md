@@ -67,24 +67,26 @@ $ python3 main.py -y <year(yy)> -b <branch extension(XX)> -m <max range of USN> 
 AD, AI, AS, AT, BT, CH, CI, CS, CV, CY, EC, EE, EI, ET, IM, IS, MD, ME
 ```
 where,
-AD = Artificial Intelligence and Data Science (AI&DS)
-AI = Articifial Intelligence and Machine Learning (AI&ML)
-AS = Aerospace Engineering
-AT = Architecture
-BT = Biotechnology
-CH = Chemical Engineering
-CI = CSE(AI&ML)
-CS = Computer Science and Engineering (CSE)
-CV = Civil Engineering
-CY = CSE(Cyber Security)
-EC = Electronics and Communication Engineering (ECE)
-EE = Electrical and Electronics Engineering (EEE)
-EI = Electronics and Instrumentation Engineering (EIE)
-ET = Electronics and Telecommunication Engineering (ETE)
-IM = Industrial Engineering and Management (IEM)
-IS = Information Science and Engineering (ISE)
-MD = Medical Electronics Engineering
-ME = Mechanical Engineering
+| Code | Branch Name |
+| :--- | :--- |
+| **AD** | Artificial Intelligence and Data Science (AI&DS) |
+| **AI** | Artificial Intelligence and Machine Learning (AI&ML) |
+| **AS** | Aerospace Engineering |
+| **AT** | Architecture |
+| **BT** | Biotechnology |
+| **CH** | Chemical Engineering |
+| **CI** | CSE(AI&ML) |
+| **CS** | Computer Science and Engineering (CSE) |
+| **CV** | Civil Engineering |
+| **CY** | CSE(Cyber Security) |
+| **EC** | Electronics and Communication Engineering (ECE) |
+| **EE** | Electrical and Electronics Engineering (EEE) |
+| **EI** | Electronics and Instrumentation Engineering (EIE) |
+| **ET** | Electronics and Telecommunication Engineering (ETE) |
+| **IM** | Industrial Engineering and Management (IEM) |
+| **IS** | Information Science and Engineering (ISE) |
+| **MD** | Medical Electronics Engineering |
+| **ME** | Mechanical Engineering |
 
 ## Example usage
 
