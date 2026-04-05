@@ -11,7 +11,7 @@ import os
 import html
 from bs4 import BeautifulSoup
 
-BRANCHES = ["CS", "EC", "IS", "ME", "ML", "CH", "CV", "EE", "TI", "EI", "IM", "AT", "BT", "CY", "CI"]
+BRANCHES = ["AD", "AI", "AS", "AT", "BT", "CH", "CI", "CS", "CV", "CY", "EC", "EE", "EI", "ET", "IM", "IS", "MD", "ME"]
 
 SSL = ssl.create_default_context()
 SSL.check_hostname = False
